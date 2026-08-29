@@ -1,0 +1,208 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  background-color: #050811;
+  color: #fff;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  overflow: hidden;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* =========================================
+   Login Screen (Image A)
+   ========================================= */
+#login-screen {
+  position: fixed;
+  inset: 0;
+  background: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.login-card {
+  background: #ffffff;
+  padding: 40px 50px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e2e8f0;
+  max-width: 440px;
+  width: 90%;
+}
+
+.login-card h2 {
+  color: #1e293b;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.login-subtitle {
+  color: #64748b;
+  font-size: 14px;
+  margin-bottom: 28px;
+  line-height: 1.5;
+}
+
+#google-signin-btn {
+  display: flex;
+  justify-content: center;
+}
+
+/* =========================================
+   3D Canvas & UI Controls (Image B & C)
+   ========================================= */
+#container {
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+#menu {
+  position: absolute;
+  bottom: 25px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 12px;
+  z-index: 10;
+}
+
+button {
+  color: rgba(127, 255, 255, 0.85);
+  background: rgba(2, 6, 23, 0.7);
+  outline: 1px solid rgba(127, 255, 255, 0.75);
+  border: 0px;
+  padding: 10px 22px;
+  cursor: pointer;
+  font-weight: 700;
+  letter-spacing: 1px;
+  transition: all 0.2s ease;
+  border-radius: 6px;
+  backdrop-filter: blur(4px);
+}
+
+button:hover, button.active {
+  background-color: rgba(0, 255, 255, 0.4);
+  color: #ffffff;
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.6);
+}
+
+#legend {
+  position: absolute;
+  bottom: 25px;
+  right: 35px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #e2e8f0;
+  background: rgba(2, 6, 23, 0.6);
+  padding: 8px 14px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  z-index: 10;
+}
+
+.legend-bar {
+  width: 130px;
+  height: 10px;
+  border-radius: 5px;
+  background: linear-gradient(to right, #EF3022, #FCCA2E, #3A8F48);
+}
+
+/* =========================================
+   3D Tile / Card Component (Image B)
+   ========================================= */
+.element {
+  width: 140px;
+  height: 180px;
+  box-shadow: 0px 0px 14px rgba(0, 255, 255, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 8px;
+  user-select: none;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.element:hover {
+  box-shadow: 0px 0px 24px rgba(255, 255, 255, 0.9);
+  border-color: #ffffff;
+}
+
+/* Color Thresholds based on Net Worth */
+.net-worth-low {
+  background-color: rgba(239, 48, 34, 0.85); /* Red < $100K */
+}
+
+.net-worth-mid {
+  background-color: rgba(252, 202, 46, 0.85); /* Orange $100K - $200K */
+  color: #0f172a;
+}
+
+.net-worth-high {
+  background-color: rgba(58, 143, 72, 0.85); /* Green > $200K */
+}
+
+.element-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+.element-photo-wrapper {
+  display: flex;
+  justify-content: center;
+  margin: 2px 0;
+}
+
+.element-photo {
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  background-color: #1e293b;
+}
+
+.element-body {
+  text-align: center;
+}
+
+.element-name {
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.element-interest {
+  font-size: 10px;
+  opacity: 0.9;
+  margin: 1px 0;
+}
+
+.element-networth {
+  font-size: 10px;
+  font-weight: 800;
+}
