@@ -104,36 +104,35 @@ function initThreeJS(dataItems) {
     const element = document.createElement('div');
     element.className = 'element';
 
+    // Determine Net Worth color class
+    let colorClass = 'net-worth-high';
     if (item.netWorthVal < 100000) {
-      element.classList.add('net-worth-low');
+      colorClass = 'net-worth-low';
     } else if (item.netWorthVal < 200000) {
-      element.classList.add('net-worth-mid');
-    } else {
-      element.classList.add('net-worth-high');
+      colorClass = 'net-worth-mid';
     }
 
     const fallbackAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(item.name || 'User')}&background=random`;
 
     element.innerHTML = `
-      <div class="element-header">
-        <span>${item.country || 'N/A'}</span>
-        <span>Age: ${item.age || '-'}</span>
+      <div class="element-card ${colorClass}">
+        <div class="element-header">
+          <span>${item.country || 'N/A'}</span>
+          <span>Age: ${item.age || '-'}</span>
+        </div>
+        <div class="element-photo-wrapper">
+          <img class="element-photo" 
+               src="${item.photo}" 
+               alt="${item.name}" 
+               referrerpolicy="no-referrer"
+               onerror="this.onerror=null; this.src='${fallbackAvatar}';">
+        </div>
+        <div class="element-body">
+          <div class="element-name" title="${item.name}">${item.name}</div>
+          <div class="element-interest">${item.interest}</div>
+          <div class="element-networth">${item.netWorthStr}</div>
+        </div>
       </div>
-
-      <div class="element-photo-wrapper">
-        <img class="element-photo" 
-             src="${item.photo}" 
-             alt="${item.name}" 
-             referrerpolicy="no-referrer"
-             onerror="this.onerror=null; this.src='${fallbackAvatar}';">
-      </div>
-
-      <div class="element-body">
-        <div class="element-name" title="${item.name}">${item.name}</div>
-        <div class="element-interest">${item.interest}</div>
-        <div class="element-networth">${item.netWorthStr}</div>
-      </div>
-
     `;
 
     const objectCSS = new THREE.CSS3DObject(element);
@@ -286,7 +285,7 @@ function bindButton(id, target) {
     transform(target, 2000);
   });
 
-  
+
 }
 
 function transform(targets, duration) {
