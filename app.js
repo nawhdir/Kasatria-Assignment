@@ -86,18 +86,14 @@ function initThreeJS(dataItems) {
     const item = dataItems[i];
     const element = document.createElement('div');
     element.className = 'element';
-    let colorClass = 'net-worth-high';
-    if (item.netWorthVal < 100000) {
-      colorClass = 'net-worth-low';
-    } 
-    else if (item.netWorthVal < 200000) {
-      
-      colorClass = 'net-worth-mid';
-    }
+
+    const cardBg = getSpectrumColor(item.netWorthVal, 0.85);
+    const cardBorder = getSpectrumColor(item.netWorthVal, 0.95);
+    const cardGlow = getSpectrumColor(item.netWorthVal, 0.5);
 
     const fallbackAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(item.name || 'User')}&background=random`;
     element.innerHTML = `
-      <div class="element-card ${colorClass}">
+      <div class="element-card" style="background-color: ${cardBg}; border-color: ${cardBorder}; box-shadow: 0px 0px 14px ${cardGlow};">
         <div class="element-header">
           <span>${item.country || 'N/A'}</span>
           <span>Age: ${item.age || '-'}</span>
@@ -233,6 +229,32 @@ function initThreeJS(dataItems) {
   animate();
 }
 
+function getSpectrumColor(val, alpha = 0.85) {
+  const cRed = [239, 48, 34];       // #EF3022
+  const cYellow = [252, 202, 46];   // #FCCA2E
+  const cGreen = [58, 143, 72];     // #3A8F48
+  let r, g, b;
+
+  if (val <= 100000) {
+    const t = Math.max(0, Math.min(1, (val - 40000) / 60000));
+    r = Math.round(cRed[0] + (cYellow[0] - cRed[0]) * (t * 0.15));
+    g = Math.round(cRed + (cYellow - cRed) * (t * 0.15));
+    b = Math.round(cRed + (cYellow - cRed) * (t * 0.15));
+  } else if (val <= 200000) {
+    const t = (val - 100000) / 100000;
+    r = Math.round(cRed[0] + (cYellow[0] - cRed[0]) * t);
+    g = Math.round(cRed + (cYellow - cRed) * t);
+    b = Math.round(cRed + (cYellow - cRed) * t);
+  } else {
+    const t = Math.min(1, (val - 200000) / 150000);
+    r = Math.round(cYellow[0] + (cGreen[0] - cYellow[0]) * t);
+    g = Math.round(cYellow + (cGreen - cYellow) * t);
+    b = Math.round(cYellow + (cGreen - cYellow) * t);
+  }
+
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
 
 
 
@@ -311,3 +333,4 @@ function animate() {
 function render() {
   renderer.render(scene, camera);
 }
+
