@@ -87,9 +87,9 @@ function initThreeJS(dataItems) {
     const element = document.createElement('div');
     element.className = 'element';
 
-    const cardBg = getSpectrumColor(item.netWorthVal, 0.85);
+    const cardBg = getSpectrumColor(item.netWorthVal, 0.88);
     const cardBorder = getSpectrumColor(item.netWorthVal, 0.95);
-    const cardGlow = getSpectrumColor(item.netWorthVal, 0.5);
+    const cardGlow = getSpectrumColor(item.netWorthVal, 0.45);
 
     const fallbackAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(item.name || 'User')}&background=random`;
     element.innerHTML = `
@@ -229,27 +229,27 @@ function initThreeJS(dataItems) {
   animate();
 }
 
-function getSpectrumColor(val, alpha = 0.85) {
-  const cRed = [239, 48, 34];       // #EF3022
-  const cYellow = [252, 202, 46];   // #FCCA2E
-  const cGreen = [58, 143, 72];     // #3A8F48
+function getSpectrumColor(val, alpha = 0.88) {
+  const rRed = 239, gRed = 48, bRed = 34;
+  const rYellow = 252, gYellow = 202, bYellow = 46;
+  const rGreen = 58, gGreen = 143, bGreen = 72;
+
+  const minVal = 44000;
+  const midVal = 180000;
+  const maxVal = 370000;
+
   let r, g, b;
 
-  if (val <= 100000) {
-    const t = Math.max(0, Math.min(1, (val - 40000) / 60000));
-    r = Math.round(cRed[0] + (cYellow[0] - cRed[0]) * (t * 0.15));
-    g = Math.round(cRed + (cYellow - cRed) * (t * 0.15));
-    b = Math.round(cRed + (cYellow - cRed) * (t * 0.15));
-  } else if (val <= 200000) {
-    const t = (val - 100000) / 100000;
-    r = Math.round(cRed[0] + (cYellow[0] - cRed[0]) * t);
-    g = Math.round(cRed + (cYellow - cRed) * t);
-    b = Math.round(cRed + (cYellow - cRed) * t);
+  if (val <= midVal) {
+    const t = Math.max(0, Math.min(1, (val - minVal) / (midVal - minVal)));
+    r = Math.round(rRed + (rYellow - rRed) * t);
+    g = Math.round(gRed + (gYellow - gRed) * t);
+    b = Math.round(bRed + (bYellow - bRed) * t);
   } else {
-    const t = Math.min(1, (val - 200000) / 150000);
-    r = Math.round(cYellow[0] + (cGreen[0] - cYellow[0]) * t);
-    g = Math.round(cYellow + (cGreen - cYellow) * t);
-    b = Math.round(cYellow + (cGreen - cYellow) * t);
+    const t = Math.max(0, Math.min(1, (val - midVal) / (maxVal - midVal)));
+    r = Math.round(rYellow + (rGreen - rYellow) * t);
+    g = Math.round(gYellow + (gGreen - gYellow) * t);
+    b = Math.round(bYellow + (bGreen - bYellow) * t);
   }
 
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
