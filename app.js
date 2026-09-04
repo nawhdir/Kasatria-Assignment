@@ -4,7 +4,7 @@ let camera, scene, renderer, controls;
 let globalData = [];
 let currentLayout = 'table';
 let currentSort = 'default';
-const targets = { table: [], sphere: [], helix: [], grid: [] };
+const targets = { table: [], sphere: [], helix: [], grid: [], pyramid: [] };
 
 
 // Google authenticate
@@ -203,7 +203,57 @@ function initThreeJS(dataItems) {
   }
 
 
+// pyramid view
+  const S_tetra = 2400;
+  const R_b = S_tetra / Math.sqrt(3);
+  const H_total = S_tetra * Math.sqrt(2 / 3);
+  const h_base = H_total * 0.25;
+  const h_apex = H_total * 0.75;
 
+  const v_top = new THREE.Vector3(0, h_apex, 0);
+  const v1 = new THREE.Vector3(R_b * Math.cos(0), -h_base, R_b * Math.sin(0));
+  const v2 = new THREE.Vector3(R_b * Math.cos(2 * Math.PI / 3), -h_base, R_b * Math.sin(2 * Math.PI / 3));
+  const v3 = new THREE.Vector3(R_b * Math.cos(4 * Math.PI / 3), -h_base, R_b * Math.sin(4 * Math.PI / 3));
+
+  const tetraFaces = [
+    { A: v_top, B: v1, C: v2 },
+    { A: v_top, B: v2, C: v3 },
+    { A: v_top, B: v3, C: v1 },
+    { A: v1, B: v2, C: v3 }
+  ];
+
+  const itemsPerFace = Math.ceil(count / 4);
+  const totalRowsOnFace = Math.floor((Math.sqrt(8 * (itemsPerFace - 1) + 1) - 1) / 2) + 1;
+
+  for (let i = 0; i < count; i++) {
+    const faceIndex = Math.min(Math.floor(i / itemsPerFace), 3);
+    const localIndex = i - (faceIndex * itemsPerFace);
+    const r = Math.floor((Math.sqrt(8 * localIndex + 1) - 1) / 2);
+    const c = localIndex - Math.floor(r * (r + 1) / 2);
+    const face = tetraFaces[faceIndex];
+    const u = (r + 0.6) / totalRowsOnFace;
+    const v = (c + 0.5) / (r + 1);
+    const pLeft = new THREE.Vector3().lerpVectors(face.A, face.B, u);
+    const pRight = new THREE.Vector3().lerpVectors(face.A, face.C, u);
+    const pos = new THREE.Vector3().lerpVectors(pLeft, pRight, v);
+    const edge1 = new THREE.Vector3().subVectors(face.B, face.A);
+    const edge2 = new THREE.Vector3().subVectors(face.C, face.A);
+    let normal = new THREE.Vector3().crossVectors(edge1, edge2).normalize();
+    const centroid = new THREE.Vector3().add(face.A).add(face.B).add(face.C).divideScalar(3);
+    if (normal.dot(centroid) < 0) {
+      normal.negate();
+    }
+
+    const baseMid = new THREE.Vector3().addVectors(face.B, face.C).multiplyScalar(0.5);
+    const upVector = new THREE.Vector3().subVectors(face.A, baseMid).normalize();
+
+    const object = new THREE.Object3D();
+    object.position.copy(pos);
+    object.up.copy(upVector);
+    object.lookAt(pos.clone().add(normal));
+
+    targets.pyramid.push(object);
+  }
 
 
 
@@ -261,7 +311,7 @@ function getSpectrumColor(val, alpha = 0.88) {
 // sorting & layout
 
 function bindLayoutButtons() {
-  const layouts = ['table', 'sphere', 'helix', 'grid'];
+  const layouts = ['table', 'sphere', 'helix', 'grid', 'pyramid'];
   layouts.forEach(name => {
     document.getElementById(name).addEventListener('click', function () {
       document.querySelectorAll('#menu button').forEach(b => b.classList.remove('active'));
